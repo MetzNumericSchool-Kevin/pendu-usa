@@ -1,7 +1,6 @@
-// Liste de mots
+// les mots a deviner
 const mots = ["JAVASCRIPT", "PENDU", "CLAVIER", "ORDINATEUR", "ECRAN", "SOURIS", "PROGRAMME", "VARIABLE", "FONCTION", "TABLEAU"];
 
-// Variables du jeu
 let motChoisi = "";
 let lettresTrouvees = [];
 let lettresJouees = [];
@@ -10,15 +9,20 @@ let partieTerminee = false;
 let serieVictoires = 0;
 let record = 0;
 
-// Elements du DOM
+// on recupere les elements html
 const wordDisplay = document.getElementById("word-display");
 const errorsDisplay = document.getElementById("errors");
 const recordDisplay = document.getElementById("record");
 const lettersUsed = document.getElementById("letters-used");
 const modal = document.getElementById("game-over-modal");
 const gameResult = document.getElementById("game-result");
+const btnNouvelle = document.querySelectorAll(".btn-primary")[0];
+const btnRejouer = document.querySelector("#game-over-modal .btn-primary");
+const btnRegles = document.querySelector(".btn-outline");
+const rulesModal = document.getElementById("rules-modal");
 
-// Fonction pour afficher le mot avec des underscores
+
+// cette fonction affiche le mot avec des _ pour les lettres pas encore trouvées
 function afficherMot() {
   let html = "";
   for (let i = 0; i < motChoisi.length; i++) {
@@ -31,8 +35,10 @@ function afficherMot() {
   wordDisplay.innerHTML = html;
 }
 
-// Fonction pour initialiser le jeu
+
+// on initialise le jeu (appelé au debut et quand on rejoue)
 function initialiserJeu() {
+  // mot aleatoire
   motChoisi = mots[Math.floor(Math.random() * mots.length)];
   lettresTrouvees = [];
   lettresJouees = [];
@@ -42,15 +48,15 @@ function initialiserJeu() {
   errorsDisplay.textContent = "0/5";
   lettersUsed.innerHTML = "";
 
-  // Cacher les parties du pendu
+  // on cache le dessin du pendu
   for (let i = 1; i <= 5; i++) {
     document.getElementById("error-" + i).classList.add("hidden");
   }
 
   afficherMot();
 
-  // Charger le record depuis localStorage
-  const savedRecord = localStorage.getItem("record");
+  // on recupere le record dans le localStorage
+  let savedRecord = localStorage.getItem("record");
   if (savedRecord) {
     record = parseInt(savedRecord);
   }
@@ -61,19 +67,20 @@ function initialiserJeu() {
   }
 }
 
-// Fonction pour jouer une lettre
+// quand le joueur tape une lettre
 function jouerLettre(lettre) {
   if (motChoisi.includes(lettre)) {
-    // Bonne lettre
+    // la lettre est dans le mot
     lettresTrouvees.push(lettre);
     afficherMot();
 
-    const badge = document.createElement("span");
+    // on ajoute un badge vert
+    let badge = document.createElement("span");
     badge.className = "badge badge-success";
     badge.textContent = lettre;
     lettersUsed.appendChild(badge);
 
-    // Verifier victoire
+    // on verifie si le joueur a gagné
     let gagne = true;
     for (let i = 0; i < motChoisi.length; i++) {
       if (!lettresTrouvees.includes(motChoisi[i])) {
@@ -83,13 +90,17 @@ function jouerLettre(lettre) {
     if (gagne) {
       victoire();
     }
+
   } else {
-    // Mauvaise lettre
+    // la lettre n'est pas dans le mot
     nbErreurs++;
     errorsDisplay.textContent = nbErreurs + "/5";
+
+    // on montre la partie du pendu
     document.getElementById("error-" + nbErreurs).classList.remove("hidden");
 
-    const badge = document.createElement("span");
+    // badge rouge
+    let badge = document.createElement("span");
     badge.className = "badge badge-error";
     badge.textContent = lettre;
     lettersUsed.appendChild(badge);
@@ -100,14 +111,18 @@ function jouerLettre(lettre) {
   }
 }
 
+
 function victoire() {
   partieTerminee = true;
   serieVictoires++;
+
+  // nouveau record ?
   if (serieVictoires > record) {
     record = serieVictoires;
     localStorage.setItem("record", record);
     recordDisplay.textContent = record;
   }
+
   gameResult.textContent = "Bravo ! Vous avez trouvé le mot : " + motChoisi;
   modal.showModal();
 }
@@ -119,39 +134,38 @@ function defaite() {
   modal.showModal();
 }
 
-// Ecouteur clavier
-document.addEventListener("keydown", function (e) {
+
+// --- ecouteur clavier ---
+document.addEventListener("keydown", function(e) {
   if (partieTerminee) return;
 
-  const lettre = e.key.toUpperCase();
+  let lettre = e.key.toUpperCase();
 
+  // on verifie que c'est bien une lettre
   if (lettre.length !== 1 || lettre < "A" || lettre > "Z") return;
 
+  // deja jouée ?
   if (lettresJouees.includes(lettre)) return;
 
   lettresJouees.push(lettre);
   jouerLettre(lettre);
 });
 
-// Bouton nouvelle partie
-const btnNouvelle = document.querySelectorAll(".btn-primary")[0];
-btnNouvelle.addEventListener("click", function () {
+// bouton nouvelle partie
+btnNouvelle.addEventListener("click", function() {
   initialiserJeu();
 });
 
-// Bouton rejouer dans la modal
-const btnRejouer = document.querySelector("#game-over-modal .btn-primary");
-btnRejouer.addEventListener("click", function () {
+// bouton rejouer (dans la modal)
+btnRejouer.addEventListener("click", function() {
   modal.close();
   initialiserJeu();
 });
 
-// Bouton regles
-const btnRegles = document.querySelector(".btn-outline");
-const rulesModal = document.getElementById("rules-modal");
-btnRegles.addEventListener("click", function () {
+// bouton regles
+btnRegles.addEventListener("click", function() {
   rulesModal.showModal();
 });
 
-// Lancer le jeu
+// on lance le jeu !
 initialiserJeu();

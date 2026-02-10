@@ -146,5 +146,12 @@ btnRejouer.addEventListener("click", function () {
   initialiserJeu();
 });
 
+// Bouton regles
+var btnRegles = document.querySelector(".btn-outline");
+var rulesModal = document.getElementById("rules-modal");
+btnRegles.addEventListener("click", function () {
+  rulesModal.showModal();
+});
+
 // Lancer le jeu
 initialiserJeu();

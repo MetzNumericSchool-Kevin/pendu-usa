@@ -106,6 +106,25 @@
       </div>
     </main>
 
+    <dialog id="rules-modal" class="modal">
+      <div class="modal-box">
+        <h3 class="font-bold text-lg">Règles du jeu</h3>
+        <ul class="py-4 list-disc list-inside space-y-2">
+          <li>Un mot est choisi au hasard, vous devez le deviner lettre par lettre</li>
+          <li>Tapez une lettre sur votre clavier pour jouer</li>
+          <li>Si la lettre est dans le mot, elle apparaît en vert</li>
+          <li>Si la lettre n'est pas dans le mot, une partie du pendu apparaît (en rouge)</li>
+          <li>Vous avez le droit à 5 erreurs maximum</li>
+          <li>Trouvez le mot avant que le pendu soit complet pour gagner !</li>
+        </ul>
+        <div class="modal-action">
+          <form method="dialog">
+            <button class="btn">Fermer</button>
+          </form>
+        </div>
+      </div>
+    </dialog>
+
     <dialog id="game-over-modal" class="modal">
       <div class="modal-box">
         <h3 class="font-bold text-lg">Partie terminée !</h3>

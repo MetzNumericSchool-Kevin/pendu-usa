@@ -112,5 +112,18 @@ document.addEventListener("keydown", function (e) {
   jouerLettre(lettre);
 });
 
+// Bouton nouvelle partie
+var btnNouvelle = document.querySelectorAll(".btn-primary")[0];
+btnNouvelle.addEventListener("click", function () {
+  initialiserJeu();
+});
+
+// Bouton rejouer dans la modal
+var btnRejouer = document.querySelector("#game-over-modal .btn-primary");
+btnRejouer.addEventListener("click", function () {
+  modal.close();
+  initialiserJeu();
+});
+
 // Lancer le jeu
 initialiserJeu();

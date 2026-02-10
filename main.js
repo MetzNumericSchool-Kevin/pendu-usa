@@ -12,6 +12,8 @@ var partieTerminee = false;
 var wordDisplay = document.getElementById("word-display");
 var errorsDisplay = document.getElementById("errors");
 var lettersUsed = document.getElementById("letters-used");
+var modal = document.getElementById("game-over-modal");
+var gameResult = document.getElementById("game-result");
 
 // Fonction pour afficher le mot avec des underscores
 function afficherMot() {
@@ -56,6 +58,17 @@ function jouerLettre(lettre) {
     badge.className = "badge badge-success";
     badge.textContent = lettre;
     lettersUsed.appendChild(badge);
+
+    // Verifier victoire
+    var gagne = true;
+    for (var i = 0; i < motChoisi.length; i++) {
+      if (!lettresTrouvees.includes(motChoisi[i])) {
+        gagne = false;
+      }
+    }
+    if (gagne) {
+      victoire();
+    }
   } else {
     // Mauvaise lettre
     nbErreurs++;
@@ -66,7 +79,23 @@ function jouerLettre(lettre) {
     badge.className = "badge badge-error";
     badge.textContent = lettre;
     lettersUsed.appendChild(badge);
+
+    if (nbErreurs === 5) {
+      defaite();
+    }
   }
+}
+
+function victoire() {
+  partieTerminee = true;
+  gameResult.textContent = "Bravo ! Vous avez trouvé le mot : " + motChoisi;
+  modal.showModal();
+}
+
+function defaite() {
+  partieTerminee = true;
+  gameResult.textContent = "Perdu ! Le mot était : " + motChoisi;
+  modal.showModal();
 }
 
 // Ecouteur clavier

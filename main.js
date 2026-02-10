@@ -1,27 +1,27 @@
 // Liste de mots
-var mots = ["JAVASCRIPT", "PENDU", "CLAVIER", "ORDINATEUR", "ECRAN", "SOURIS", "PROGRAMME", "VARIABLE", "FONCTION", "TABLEAU"];
+const mots = ["JAVASCRIPT", "PENDU", "CLAVIER", "ORDINATEUR", "ECRAN", "SOURIS", "PROGRAMME", "VARIABLE", "FONCTION", "TABLEAU"];
 
 // Variables du jeu
-var motChoisi = "";
-var lettresTrouvees = [];
-var lettresJouees = [];
-var nbErreurs = 0;
-var partieTerminee = false;
-var serieVictoires = 0;
-var record = 0;
+let motChoisi = "";
+let lettresTrouvees = [];
+let lettresJouees = [];
+let nbErreurs = 0;
+let partieTerminee = false;
+let serieVictoires = 0;
+let record = 0;
 
 // Elements du DOM
-var wordDisplay = document.getElementById("word-display");
-var errorsDisplay = document.getElementById("errors");
-var recordDisplay = document.getElementById("record");
-var lettersUsed = document.getElementById("letters-used");
-var modal = document.getElementById("game-over-modal");
-var gameResult = document.getElementById("game-result");
+const wordDisplay = document.getElementById("word-display");
+const errorsDisplay = document.getElementById("errors");
+const recordDisplay = document.getElementById("record");
+const lettersUsed = document.getElementById("letters-used");
+const modal = document.getElementById("game-over-modal");
+const gameResult = document.getElementById("game-result");
 
 // Fonction pour afficher le mot avec des underscores
 function afficherMot() {
-  var html = "";
-  for (var i = 0; i < motChoisi.length; i++) {
+  let html = "";
+  for (let i = 0; i < motChoisi.length; i++) {
     if (lettresTrouvees.includes(motChoisi[i])) {
       html += '<span class="letter-placeholder">' + motChoisi[i] + '</span>';
     } else {
@@ -43,14 +43,14 @@ function initialiserJeu() {
   lettersUsed.innerHTML = "";
 
   // Cacher les parties du pendu
-  for (var i = 1; i <= 5; i++) {
+  for (let i = 1; i <= 5; i++) {
     document.getElementById("error-" + i).classList.add("hidden");
   }
 
   afficherMot();
 
   // Charger le record depuis localStorage
-  var savedRecord = localStorage.getItem("record");
+  const savedRecord = localStorage.getItem("record");
   if (savedRecord) {
     record = parseInt(savedRecord);
   }
@@ -68,14 +68,14 @@ function jouerLettre(lettre) {
     lettresTrouvees.push(lettre);
     afficherMot();
 
-    var badge = document.createElement("span");
+    const badge = document.createElement("span");
     badge.className = "badge badge-success";
     badge.textContent = lettre;
     lettersUsed.appendChild(badge);
 
     // Verifier victoire
-    var gagne = true;
-    for (var i = 0; i < motChoisi.length; i++) {
+    let gagne = true;
+    for (let i = 0; i < motChoisi.length; i++) {
       if (!lettresTrouvees.includes(motChoisi[i])) {
         gagne = false;
       }
@@ -89,7 +89,7 @@ function jouerLettre(lettre) {
     errorsDisplay.textContent = nbErreurs + "/5";
     document.getElementById("error-" + nbErreurs).classList.remove("hidden");
 
-    var badge = document.createElement("span");
+    const badge = document.createElement("span");
     badge.className = "badge badge-error";
     badge.textContent = lettre;
     lettersUsed.appendChild(badge);
@@ -123,7 +123,7 @@ function defaite() {
 document.addEventListener("keydown", function (e) {
   if (partieTerminee) return;
 
-  var lettre = e.key.toUpperCase();
+  const lettre = e.key.toUpperCase();
 
   if (lettre.length !== 1 || lettre < "A" || lettre > "Z") return;
 
@@ -134,21 +134,21 @@ document.addEventListener("keydown", function (e) {
 });
 
 // Bouton nouvelle partie
-var btnNouvelle = document.querySelectorAll(".btn-primary")[0];
+const btnNouvelle = document.querySelectorAll(".btn-primary")[0];
 btnNouvelle.addEventListener("click", function () {
   initialiserJeu();
 });
 
 // Bouton rejouer dans la modal
-var btnRejouer = document.querySelector("#game-over-modal .btn-primary");
+const btnRejouer = document.querySelector("#game-over-modal .btn-primary");
 btnRejouer.addEventListener("click", function () {
   modal.close();
   initialiserJeu();
 });
 
 // Bouton regles
-var btnRegles = document.querySelector(".btn-outline");
-var rulesModal = document.getElementById("rules-modal");
+const btnRegles = document.querySelector(".btn-outline");
+const rulesModal = document.getElementById("rules-modal");
 btnRegles.addEventListener("click", function () {
   rulesModal.showModal();
 });

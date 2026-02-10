@@ -45,5 +45,43 @@ function initialiserJeu() {
   afficherMot();
 }
 
+// Fonction pour jouer une lettre
+function jouerLettre(lettre) {
+  if (motChoisi.includes(lettre)) {
+    // Bonne lettre
+    lettresTrouvees.push(lettre);
+    afficherMot();
+
+    var badge = document.createElement("span");
+    badge.className = "badge badge-success";
+    badge.textContent = lettre;
+    lettersUsed.appendChild(badge);
+  } else {
+    // Mauvaise lettre
+    nbErreurs++;
+    errorsDisplay.textContent = nbErreurs + "/5";
+    document.getElementById("error-" + nbErreurs).classList.remove("hidden");
+
+    var badge = document.createElement("span");
+    badge.className = "badge badge-error";
+    badge.textContent = lettre;
+    lettersUsed.appendChild(badge);
+  }
+}
+
+// Ecouteur clavier
+document.addEventListener("keydown", function (e) {
+  if (partieTerminee) return;
+
+  var lettre = e.key.toUpperCase();
+
+  if (lettre.length !== 1 || lettre < "A" || lettre > "Z") return;
+
+  if (lettresJouees.includes(lettre)) return;
+
+  lettresJouees.push(lettre);
+  jouerLettre(lettre);
+});
+
 // Lancer le jeu
 initialiserJeu();

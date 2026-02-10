@@ -7,10 +7,13 @@ var lettresTrouvees = [];
 var lettresJouees = [];
 var nbErreurs = 0;
 var partieTerminee = false;
+var serieVictoires = 0;
+var record = 0;
 
 // Elements du DOM
 var wordDisplay = document.getElementById("word-display");
 var errorsDisplay = document.getElementById("errors");
+var recordDisplay = document.getElementById("record");
 var lettersUsed = document.getElementById("letters-used");
 var modal = document.getElementById("game-over-modal");
 var gameResult = document.getElementById("game-result");
@@ -45,6 +48,17 @@ function initialiserJeu() {
   }
 
   afficherMot();
+
+  // Charger le record depuis localStorage
+  var savedRecord = localStorage.getItem("record");
+  if (savedRecord) {
+    record = parseInt(savedRecord);
+  }
+  if (record > 0) {
+    recordDisplay.textContent = record;
+  } else {
+    recordDisplay.textContent = "-";
+  }
 }
 
 // Fonction pour jouer une lettre
@@ -88,12 +102,19 @@ function jouerLettre(lettre) {
 
 function victoire() {
   partieTerminee = true;
+  serieVictoires++;
+  if (serieVictoires > record) {
+    record = serieVictoires;
+    localStorage.setItem("record", record);
+    recordDisplay.textContent = record;
+  }
   gameResult.textContent = "Bravo ! Vous avez trouvé le mot : " + motChoisi;
   modal.showModal();
 }
 
 function defaite() {
   partieTerminee = true;
+  serieVictoires = 0;
   gameResult.textContent = "Perdu ! Le mot était : " + motChoisi;
   modal.showModal();
 }
